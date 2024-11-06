@@ -120,6 +120,8 @@ void Shell_Loop(void){
 ```
 
 C'est dans cette partie du code que l'on rajoute de nouvelles commandes avec la suite de else If.
+
+    
 > [!TIP]
 > Pour faire des commandes en deux mots comme speed xxx on compare simultanément la commande en terme de nombre de mots de commande (ici 2)
 >et on compare le premier terme avec argv[0] 
@@ -140,6 +142,13 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
 
 <ins>Image de la Commande complémentaire décalée avec alpha = 30%, F=20kHz et DT = 100ns<ins/>
 
+<p align="left"> <img src="tek00003.png" width="85%" height="auto" /> </p>
+<ins>Visualisation du dead time<ins/>
+
+<ins><ins/>
+
+<ins><ins/>
+<ins><ins/>
 > [!TIP]
 >![image](https://github.com/user-attachments/assets/0cd49918-679e-4c6d-aa4c-c3140a1233a6)
 >
