@@ -133,13 +133,15 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
 }
 ```
 <p align="left"> <img src="tek00000.png" width="85%" height="auto" /> </p>
-<ins>Image du PWM avec son complémentaire avec alpha = 60%, F=20kHz et DT = 0( uniquement quand pas de puissance )<ins/>
+<ins>Image d'un PWM avec son complémentaire avec alpha = 60%, F=20kHz et DT = 0( uniquement quand pas de puissance )<ins/>
 
 
+<p align="left"> <img src="tek00002.png" width="85%" height="auto" /> </p>
 
+<ins>Image de la Commande complémentaire décalée avec alpha = 30%, F=20kHz et DT = 100ns<ins/>
 
-
-![image](https://github.com/user-attachments/assets/0cd49918-679e-4c6d-aa4c-c3140a1233a6)
-
-
-![image](https://github.com/user-attachments/assets/38719636-1896-470f-a62b-476840618f06)
+> [!TIP]
+>![image](https://github.com/user-attachments/assets/0cd49918-679e-4c6d-aa4c-c3140a1233a6)
+>
+>![image](https://github.com/user-attachments/assets/38719636-1896-470f-a62b-476840618f06)
+> parametrage de TIM1 pour une commande complémentaire décalée a 20kHz
