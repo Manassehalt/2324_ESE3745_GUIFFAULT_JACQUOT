@@ -118,6 +118,7 @@ void Shell_Loop(void){
 	}
 }
 ```
+
 C'est dans cette partie du code que l'on rajoute de nouvelles commandes avec la suite de else If.
 > [!TIP]
 > Pour faire des commandes en deux mots comme speed xxx on compare simultanément la commande en terme de nombre de mots de commande (ici 2)
@@ -132,4 +133,4 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
 }
 ```
 <p align="left"> <img src="tek00000.png" width="85%" height="auto" /> </p>
-<ins>Image du PWM avec son complémentaire avec alpha = 60% et DT = 0( uniquement quand pas de puissance )<ins/>
+<ins>Image du PWM avec son complémentaire avec alpha = 60%, F=20kHz et DT = 0( uniquement quand pas de puissance )<ins/>
