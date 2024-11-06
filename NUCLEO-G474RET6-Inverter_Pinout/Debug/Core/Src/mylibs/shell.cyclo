@@ -1,3 +1,5 @@
-../Core/Src/mylibs/shell.c:33:6:Shell_Init	1
-../Core/Src/mylibs/shell.c:44:6:Shell_Loop	8
-../Core/Src/mylibs/shell.c:87:6:HAL_UART_RxCpltCallback	1
+../Core/Src/mylibs/shell.c:37:6:setPWM	3
+../Core/Src/mylibs/shell.c:48:6:processCommand	3
+../Core/Src/mylibs/shell.c:58:6:Shell_Init	1
+../Core/Src/mylibs/shell.c:69:6:Shell_Loop	10
+../Core/Src/mylibs/shell.c:118:6:HAL_UART_RxCpltCallback	2
