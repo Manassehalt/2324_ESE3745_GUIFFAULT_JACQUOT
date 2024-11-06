@@ -8,39 +8,41 @@ Générer quatre PWM sur les bras de pont U et V pour controler le hacheur à pa
 Cahier des charges :
 
 Fréquence de la PWM : 20kHz
-La frequence de base 170MHz
+
+La frequence de base  de la clock est 170MHz
+
 Pour cela on utilise le timer 1 et on regle ARR=8499 PRSC=0
 
-Temps mort minimum : à voir selon la datasheet des transistors (faire valider la valeur)
-d'apres la datasheet:
+
+
+Temps mort minimum d'apres la datasheet:
 
 turn off delay time 39ns
 
 fall time 35ns
+> [!WARNING]
+>On va donc prendre un temps mort de 100ns pour avoir une bonne marge de securité.
+> 
+>Le dead Time est une necessité pour eviter de detruire les transistors durant la commutation 
 
-On va donc prendre un temps mort de 100ns pour avoir une bonne marge de securité
 Résolution minimum : 10bits.
 
 Pour les tests, fixer le rapport cyclique à 60%.
 alpha =0.6
 Une fois les PWM générées, les afficher sur un oscilloscope et les faire vérifier par votre professeur.
-
-!!!Activer le PWMN!!! :
-
-	HAL_TIM_PWM_Start(&htim1,TIM_CHANNEL_1);
-	HAL_TIMEx_PWMN_Start(&htim1, TIM_CHANNEL_1); la complementaire
-
+> [!IMPORTANT]
+>!!!Activer le PWMN!!! :
+>```C
+>HAL_TIM_PWM_Start(&htim1,TIM_CHANNEL_1);
+>HAL_TIMEx_PWMN_Start(&htim1, TIM_CHANNEL_1); la complementaire
+>```
 
 
  Code shell.c : 
 
  ```C
- /*
- * shell.c
- *
- *  Created on: Oct 1, 2023
- *      Author: nicolas
- */
+ /* shell.c*/
+
 #include "usart.h"
 #include "mylibs/shell.h"
 #include <stdio.h>
@@ -128,7 +130,8 @@ void Shell_Loop(void){
 		}
 		uartRxReceived = 0;
 	}
-
+```
+```C
 	if(newCmdReady){
 		if(strcmp(argv[0],"WhereisBrian?")==0){
 			HAL_UART_Transmit(&huart2, brian, sizeof(brian), HAL_MAX_DELAY);
@@ -148,7 +151,9 @@ void Shell_Loop(void){
 		newCmdReady = 0;
 	}
 }
-
+```
+C'est dans cette partie du code que l'on rajoute de nouvelles commandes avec la suite de else If.
+```c
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
     if (huart->Instance == USART2) {
         uartRxReceived = 1;
