@@ -24,3 +24,8 @@ Cahier des charges :
 Pour les tests, fixer le rapport cyclique à 60%.
 alpha =0.6
 Une fois les PWM générées, les afficher sur un oscilloscope et les faire vérifier par votre professeur.
+
+!!!Activer le PWMN!!! :
+
+	HAL_TIM_PWM_Start(&htim1,TIM_CHANNEL_1);
+	HAL_TIMEx_PWMN_Start(&htim1, TIM_CHANNEL_1);
