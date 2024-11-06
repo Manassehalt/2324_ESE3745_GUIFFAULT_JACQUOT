@@ -33,6 +33,8 @@ Une fois les PWM générées, les afficher sur un oscilloscope et les faire vér
 
 
  Code shell.c : 
+
+ ```C
  /*
  * shell.c
  *
@@ -153,3 +155,4 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
         HAL_UART_Receive_IT(&huart2, uartRxBuffer, UART_RX_BUFFER_SIZE);
     }
 }
+```
