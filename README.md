@@ -14,9 +14,9 @@ Pour cela on utilise le timer 1 et on regle ARR=8499 PRSC=0
 Temps mort minimum : à voir selon la datasheet des transistors (faire valider la valeur)
 d'apres la datasheet:
 
-turn off delay time39ns
+turn off delay time 39ns
 
-fall time35ns
+fall time 35ns
 
 On va donc prendre un temps mort de 100ns pour avoir une bonne marge de securité
 Résolution minimum : 10bits.
