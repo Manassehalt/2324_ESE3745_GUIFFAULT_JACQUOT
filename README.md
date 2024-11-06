@@ -1,44 +1,48 @@
 # 2324_ESE3745_GUIFFAULT_JACQUOT
 
 
-6.1. Génération de 4 PWM
+## 6.1. Génération de 4 PWM
 
 Générer quatre PWM sur les bras de pont U et V pour controler le hacheur à partir du timer déjà attribué sur ces pins.
 
-Cahier des charges :
+<ins> **Cahier des charges :** </ins>
 
-Fréquence de la PWM : 20kHz
+- [x] Fréquence de la PWM : 20kHz
 
 La frequence de base  de la clock est 170MHz
 
 Pour cela on utilise le timer 1 et on regle ARR=8499 PRSC=0
 
 
+- [x] Mettre en place un Temps mort
 
 Temps mort minimum d'apres la datasheet:
 
 turn off delay time 39ns
 
 fall time 35ns
-> [!WARNING]
+
+> [!CAUTION]
 >On va donc prendre un temps mort de 100ns pour avoir une bonne marge de securité.
 > 
->Le dead Time est une necessité pour eviter de detruire les transistors durant la commutation 
+>Le dead Time est une **nécessité** pour éviter de detruire les transistors durant la commutation 
 
-Résolution minimum : 10bits.
+- [x] Résolution minimum : 10bits.
 
 Pour les tests, fixer le rapport cyclique à 60%.
 alpha =0.6
 Une fois les PWM générées, les afficher sur un oscilloscope et les faire vérifier par votre professeur.
 > [!IMPORTANT]
->!!!Activer le PWMN!!! :
+> 
+>!!!Activer le PWM et le PWMN!!! :
+> 
 >```C
 >HAL_TIM_PWM_Start(&htim1,TIM_CHANNEL_1);
 >HAL_TIMEx_PWMN_Start(&htim1, TIM_CHANNEL_1); la complementaire
 >```
 
 
- Code shell.c : 
+##  Code shell.c : 
 
  ```C
  /* shell.c*/
@@ -52,47 +56,8 @@ Une fois les PWM générées, les afficher sur un oscilloscope et les faire vér
 #define MAX_PERCENTAGE 100
 #define PWM_MAX_DUTY_CYCLE 8499
 
-uint8_t prompt[]="user@Nucleo-STM32G474RET6>>";
-uint8_t started[]=
-		"\r\n*-----------------------------*"
-		"\r\n| Welcome on Nucleo-STM32G474 |"
-		"\r\n*-----------------------------*"
-		"\r\n";
-uint8_t newline[]="\r\n";
-uint8_t backspace[]="\b \b";
-uint8_t cmdNotFound[]="Command not found\r\n";
-uint8_t brian[]="Brian is in the kitchen\r\n";
-uint8_t uartRxReceived;
-uint8_t uartRxBuffer[UART_RX_BUFFER_SIZE];
-uint8_t uartTxBuffer[UART_TX_BUFFER_SIZE];
-
-char	 	cmdBuffer[CMD_BUFFER_SIZE];
-int 		idx_cmd;
-char* 		argv[MAX_ARGS];
-int		 	argc = 0;
-char*		token;
-int 		newCmdReady = 0;
-
-void setPWM(int percentage) {
-    if (percentage > MAX_PERCENTAGE) {
-        percentage = MAX_PERCENTAGE;
-    } else if (percentage < 0) {
-        percentage = 0;
-    }
-    int dutyCycle = (percentage * PWM_MAX_DUTY_CYCLE) / MAX_PERCENTAGE;
-    TIM1->CCR1 = dutyCycle;
-}
-
-void processCommand() {
-    if (argc == 2 && strcmp(argv[0], "speed") == 0) {
-        int percentage = atoi(argv[1]);  // Convertit l'argument en pourcentage
-        setPWM(percentage);
-    } else {
-        HAL_UART_Transmit(&huart2, cmdNotFound, sizeof(cmdNotFound), HAL_MAX_DELAY);
-    }
-}
-
-
+ ```
+ ```C
 void Shell_Init(void){
 	memset(argv, 0, MAX_ARGS*sizeof(char*));
 	memset(cmdBuffer, 0, CMD_BUFFER_SIZE*sizeof(char));
@@ -131,6 +96,7 @@ void Shell_Loop(void){
 		uartRxReceived = 0;
 	}
 ```
+### Commandes du shell
 ```C
 	if(newCmdReady){
 		if(strcmp(argv[0],"WhereisBrian?")==0){
@@ -153,6 +119,10 @@ void Shell_Loop(void){
 }
 ```
 C'est dans cette partie du code que l'on rajoute de nouvelles commandes avec la suite de else If.
+> [!TIP]
+> Pour faire des commandes en deux mots comme speed xxx on compare simultanément la commande en terme de nombre de mots de commande (ici 2)
+>et on compare le premier terme avec argv[0] 
+
 ```c
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
     if (huart->Instance == USART2) {
@@ -161,3 +131,5 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
     }
 }
 ```
+<p align="left"> <img src="tek00000.png" width="85%" height="auto" /> </p>
+<ins>Image du PWM avec son complémentaire avec alpha = 60% et DT = 0( uniquement quand pas de puissance )<ins/>
