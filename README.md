@@ -140,22 +140,19 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
 
 <p align="left"> <img src="tek00002.png" width="85%" height="auto" /> </p>
 
-<ins>Image de la Commande complémentaire décalée avec alpha = 30%, F=20kHz et DT = 100ns<ins/>
+Image de la Commande complémentaire décalée avec alpha = 30%, F=20kHz et DT = 100ns
 
 <p align="left"> <img src="tek00003.png" width="85%" height="auto" /> </p>
-<ins>Visualisation du dead time<ins/>
+Visualisation du dead time
 
-<ins><ins/>
 
-<ins><ins/>
-<ins><ins/>
 > [!TIP]
 >![image](https://github.com/user-attachments/assets/0cd49918-679e-4c6d-aa4c-c3140a1233a6)
 >
 >![image](https://github.com/user-attachments/assets/38719636-1896-470f-a62b-476840618f06)
 > parametrage de TIM1 pour une commande complémentaire décalée a 20kHz
 
-
+```C
 
 "if(newCmdReady){
 		if(strcmp(argv[0],"WhereisBrian?")==0){
@@ -218,3 +215,4 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
 		                                          "Error: Percentage must be between 0 and 100\r\n");
 		        HAL_UART_Transmit(&huart2, uartTxBuffer, uartTxStringLength, HAL_MAX_DELAY);
 		    }"
+```
