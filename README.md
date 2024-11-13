@@ -135,7 +135,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
 }
 ```
 <p align="left"> <img src="tek00000.png" width="85%" height="auto" /> </p>
-<ins>Image d'un PWM avec son complémentaire avec alpha = 60%, F=20kHz et DT = 0( uniquement quand pas de puissance )<ins/>
+Image d'un PWM avec son complémentaire avec alpha = 60%, F=20kHz et DT = 0( uniquement quand pas de puissance )
 
 
 <p align="left"> <img src="tek00002.png" width="85%" height="auto" /> </p>
@@ -152,12 +152,25 @@ Visualisation du dead time
 >![image](https://github.com/user-attachments/assets/38719636-1896-470f-a62b-476840618f06)
 > parametrage de TIM1 pour une commande complémentaire décalée a 20kHz
 
+
+
+# 7. TP n°2 - Commande en boucle ouverte, mesure de Vitesse et de courant
+
 ```C
 
 "if(newCmdReady){
 		if(strcmp(argv[0],"WhereisBrian?")==0){
 			HAL_UART_Transmit(&huart2, brian, sizeof(brian), HAL_MAX_DELAY);
 		}
+```
+Voici le code du start dans le shell avec un message pour signaler l'execution.
+> [!TIP]
+Pour le code de la commande start ne pas oublier de définir htim1 avec:
+> ```C
+> extern TIM_HandleTypeDef htim1;
+> ```
+
+```C
 		else if (strcmp(argv[0], "start") == 0) {
 		     TIM1->CCR1 = PWM_MAX_DUTY_CYCLE / 2;
 		     TIM1->CCR2 = PWM_MAX_DUTY_CYCLE / 2;
@@ -171,6 +184,9 @@ Visualisation du dead time
 		                                              "PWM started at 50%% duty cycle\r\n");
 		     HAL_UART_Transmit(&huart2, uartTxBuffer, uartTxStringLength, HAL_MAX_DELAY);
 		}
+```
+Voici le code du stop dans le shell avec un message pour signaler l'execution.
+```C
 		else if (strcmp(argv[0], "stop") == 0) {
 		                 // Stoppe le PWM sur tous les canaux
 		      HAL_TIM_PWM_Stop(&htim1, TIM_CHANNEL_1);
@@ -182,6 +198,9 @@ Visualisation du dead time
 		                                                   "PWM stopped\r\n");
 		      HAL_UART_Transmit(&huart2, uartTxBuffer, uartTxStringLength, HAL_MAX_DELAY);
 		}
+```
+Code commande "speed" avec un changement progressif de la PWM
+```C
 		else if (strcmp(argv[0], "help") == 0) {
 		            int uartTxStringLength = snprintf((char *)uartTxBuffer, UART_TX_BUFFER_SIZE,
 		                                              "Available commands:\r\n"
@@ -216,3 +235,7 @@ Visualisation du dead time
 		        HAL_UART_Transmit(&huart2, uartTxBuffer, uartTxStringLength, HAL_MAX_DELAY);
 		    }"
 ```
+> [!Warning]
+> Il est fortement conseillé de rajouter le traitement des commandes absurdes (<0 et >100)
+> pour eviter de cramer les composant sur une faute de frappe. Ne pas oublier le HAL_Delay
+## 7.2. Mesure du courant
