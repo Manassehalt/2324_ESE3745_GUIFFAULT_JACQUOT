@@ -33,6 +33,10 @@ char* 		argv[MAX_ARGS];
 int		 	argc = 0;
 char*		token;
 int 		newCmdReady = 0;
+extern TIM_HandleTypeDef htim1;
+int i=0;
+int i_old=50;
+
 
 void setPWM(int percentage) {
     if (percentage > MAX_PERCENTAGE) {
@@ -97,15 +101,63 @@ void Shell_Loop(void){
 		if(strcmp(argv[0],"WhereisBrian?")==0){
 			HAL_UART_Transmit(&huart2, brian, sizeof(brian), HAL_MAX_DELAY);
 		}
-		else if(strcmp(argv[0], "help") == 0) {
-		    int uartTxStringLength = snprintf((char *)uartTxBuffer, UART_TX_BUFFER_SIZE,
-		                                      "Available commands:\r\n"
-		                                      " - speed <percentage>: Set motor speed as a percentage (0-100%)\r\n");
-		    HAL_UART_Transmit(&huart2, uartTxBuffer, uartTxStringLength, HAL_MAX_DELAY);
+		else if (strcmp(argv[0], "start") == 0) {
+		     TIM1->CCR1 = PWM_MAX_DUTY_CYCLE / 2;
+		     TIM1->CCR2 = PWM_MAX_DUTY_CYCLE / 2;
+
+		     HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
+		     HAL_TIMEx_PWMN_Start(&htim1, TIM_CHANNEL_1);
+		     HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_2);
+		     HAL_TIMEx_PWMN_Start(&htim1, TIM_CHANNEL_2);
+
+		     int uartTxStringLength = snprintf((char *)uartTxBuffer, UART_TX_BUFFER_SIZE,
+		                                              "PWM started at 50%% duty cycle\r\n");
+		     HAL_UART_Transmit(&huart2, uartTxBuffer, uartTxStringLength, HAL_MAX_DELAY);
 		}
-		else if(argc == 2 && strcmp(argv[0], "speed") == 0) {
-	        int percentage = atoi(argv[1]);  // Convertit l'argument en pourcentage
-	        setPWM(percentage);
+		else if (strcmp(argv[0], "stop") == 0) {
+		                 // Stoppe le PWM sur tous les canaux
+		      HAL_TIM_PWM_Stop(&htim1, TIM_CHANNEL_1);
+		      HAL_TIMEx_PWMN_Stop(&htim1, TIM_CHANNEL_1);
+		      HAL_TIM_PWM_Stop(&htim1, TIM_CHANNEL_2);
+		      HAL_TIMEx_PWMN_Stop(&htim1, TIM_CHANNEL_2);
+
+		      int uartTxStringLength = snprintf((char *)uartTxBuffer, UART_TX_BUFFER_SIZE,
+		                                                   "PWM stopped\r\n");
+		      HAL_UART_Transmit(&huart2, uartTxBuffer, uartTxStringLength, HAL_MAX_DELAY);
+		}
+		else if (strcmp(argv[0], "help") == 0) {
+		            int uartTxStringLength = snprintf((char *)uartTxBuffer, UART_TX_BUFFER_SIZE,
+		                                              "Available commands:\r\n"
+		                                              " - start: Start PWM at 50%% duty cycle\r\n"
+		                                              " - stop: Stop PWM generation\r\n"
+		                                              " - speed <percentage>: Set motor speed as a percentage (0-100%)\r\n"
+		                                              " - WhereisBrian?: Where is Brian ?\r\n");
+		            HAL_UART_Transmit(&huart2, uartTxBuffer, uartTxStringLength, HAL_MAX_DELAY);
+		}
+		else if (argc == 2 && strcmp(argv[0], "speed") == 0) {
+		    int percentage = atoi(argv[1]);  // Convertit l'argument en pourcentage
+		    if (percentage >= 0 && percentage <= 100) {
+		        static int i_old = 50;
+		        int i;
+
+		        for (i = i_old; i != percentage;) {
+		            if (i > percentage) {
+		                setPWM(i);
+		                i--;
+		                HAL_Delay(100);
+		            } else if (i < percentage) {
+		                setPWM(i);
+		                i++;
+		                HAL_Delay(100);
+		            }
+		        }
+
+		        i_old = percentage;
+		    } else {
+		        int uartTxStringLength = snprintf((char *)uartTxBuffer, UART_TX_BUFFER_SIZE,
+		                                          "Error: Percentage must be between 0 and 100\r\n");
+		        HAL_UART_Transmit(&huart2, uartTxBuffer, uartTxStringLength, HAL_MAX_DELAY);
+		    }
 		}
 		else{
 			HAL_UART_Transmit(&huart2, cmdNotFound, sizeof(cmdNotFound), HAL_MAX_DELAY);
