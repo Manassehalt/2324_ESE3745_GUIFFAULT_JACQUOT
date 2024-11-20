@@ -12,6 +12,9 @@
 
 #define MAX_PERCENTAGE 100
 #define PWM_MAX_DUTY_CYCLE 4249
+#define UART_TX_BUFFER_SIZE 256
+#define NUM_SAMPLES 10
+uint32_t adcBuffer[NUM_SAMPLES];
 
 uint8_t prompt[]="user@Nucleo-STM32G474RET6>>";
 uint8_t started[]=
@@ -34,8 +37,11 @@ int		 	argc = 0;
 char*		token;
 int 		newCmdReady = 0;
 extern TIM_HandleTypeDef htim1;
-int i=0;
-int i_old=50;
+extern ADC_HandleTypeDef hadc1;
+#define VREF        3.3
+#define ADC_RES     4096
+#define UREF        1.65
+#define SENSITIVITY 0.05
 
 
 void setPWM(int percentage) {
@@ -58,6 +64,22 @@ void processCommand() {
     }
 }
 
+void display_current_dma() {
+    char buffer[100];
+    float sum = 0;
+
+    // Calcul de la valeur moyenne à partir des données DMA
+    for (int i = 0; i < NUM_SAMPLES; i++) {
+        float voltage = (adcBuffer[i] * VREF) / ADC_RES;
+        float current = (voltage - UREF) / SENSITIVITY;
+        sum += current;
+    }
+    float avg_current = sum / NUM_SAMPLES;
+
+    // Affichage de la moyenne
+    int len = snprintf(buffer, sizeof(buffer), "Average Current: %.2f A\r\n", avg_current);
+    HAL_UART_Transmit(&huart2, (uint8_t*)buffer, len, HAL_MAX_DELAY);
+}
 
 void Shell_Init(void){
 	memset(argv, 0, MAX_ARGS*sizeof(char*));
@@ -114,6 +136,10 @@ void Shell_Loop(void){
 		                                              "PWM started at 50%% duty cycle\r\n");
 		     HAL_UART_Transmit(&huart2, uartTxBuffer, uartTxStringLength, HAL_MAX_DELAY);
 		}
+
+		else if (strcmp(argv[0], "current") == 0) {
+			display_current_dma();
+		}
 		else if (strcmp(argv[0], "stop") == 0) {
 		                 // Stoppe le PWM sur tous les canaux
 		      HAL_TIM_PWM_Stop(&htim1, TIM_CHANNEL_1);
@@ -126,13 +152,14 @@ void Shell_Loop(void){
 		      HAL_UART_Transmit(&huart2, uartTxBuffer, uartTxStringLength, HAL_MAX_DELAY);
 		}
 		else if (strcmp(argv[0], "help") == 0) {
-		            int uartTxStringLength = snprintf((char *)uartTxBuffer, UART_TX_BUFFER_SIZE,
-		                                              "Available commands:\r\n"
-		                                              " - start: Start PWM at 50%% duty cycle\r\n"
-		                                              " - stop: Stop PWM generation\r\n"
-		                                              " - speed <percentage>: Set motor speed as a percentage (0-100%)\r\n"
-		                                              " - WhereisBrian?: Where is Brian ?\r\n");
-		            HAL_UART_Transmit(&huart2, uartTxBuffer, uartTxStringLength, HAL_MAX_DELAY);
+		    int uartTxStringLength = snprintf((char *)uartTxBuffer, UART_TX_BUFFER_SIZE,
+		                                      "Available commands:\r\n"
+		                                      " - start: Start PWM at 50%% duty cycle\r\n"
+		                                      " - stop: Stop PWM generation\r\n"
+		                                      " - speed <percentage>: Set motor speed as a percentage (0-100%%)\r\n"
+		                                      " - current: Display current on PA1\r\n"
+		                                      " - WhereisBrian?: Where is Brian?\r\n");
+		    HAL_UART_Transmit(&huart2, uartTxBuffer, uartTxStringLength, HAL_MAX_DELAY);
 		}
 		else if (argc == 2 && strcmp(argv[0], "speed") == 0) {
 		    int percentage = atoi(argv[1]);  // Convertit l'argument en pourcentage

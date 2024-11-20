@@ -1,5 +1,6 @@
-../Core/Src/mylibs/shell.c:41:6:setPWM	24	static
-../Core/Src/mylibs/shell.c:52:6:processCommand	16	static
-../Core/Src/mylibs/shell.c:62:6:Shell_Init	8	static
-../Core/Src/mylibs/shell.c:73:6:Shell_Loop	32	static
-../Core/Src/mylibs/shell.c:170:6:HAL_UART_RxCpltCallback	16	static
+../Core/Src/mylibs/shell.c:47:6:setPWM	24	static
+../Core/Src/mylibs/shell.c:58:6:processCommand	16	static
+../Core/Src/mylibs/shell.c:67:6:display_current_dma	144	static
+../Core/Src/mylibs/shell.c:84:6:Shell_Init	8	static
+../Core/Src/mylibs/shell.c:95:6:Shell_Loop	32	static
+../Core/Src/mylibs/shell.c:197:6:HAL_UART_RxCpltCallback	16	static
