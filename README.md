@@ -241,8 +241,11 @@ Code commande "speed" avec un changement progressif de la PWM
 ## 7.2. Mesure du courant
 
 GO 10-SME est la sonde a effet HALL qui renvoie les courant mesurés
+
 > [!Caution]
 >Attention les signals qui renvoie la mesure de courant s'appellent U_Imes et V_Imes.
-> Mais ce sont bien des mesures de courant U et V sont les noms des canaux.
+> Mais ce sont bien des mesures de courant, U et V sont les noms des canaux.
 
-> 
+Dans notre cas, nous allons avoir besoin d'uniquement U_Imes car V_Imes=-U_Imes par definition.
+Pour ce faciliter la tache  et eviter de demultiplexer inutilement on peut desactiver les signaux
+non utilisé sur l'ADC. Ici on utilise uniquement ADC1 IN2
