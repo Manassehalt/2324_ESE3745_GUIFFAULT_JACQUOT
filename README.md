@@ -248,4 +248,7 @@ GO 10-SME est la sonde a effet HALL qui renvoie les courant mesurés
 
 Dans notre cas, nous allons avoir besoin d'uniquement U_Imes car V_Imes=-U_Imes par definition.
 Pour ce faciliter la tache  et eviter de demultiplexer inutilement on peut desactiver les signaux
-non utilisé sur l'ADC. Ici on utilise uniquement ADC1 IN2
+non utilisé sur l'ADC. Ici on utilise uniquement ADC1 IN2.
+
+On effectue une première mesure de courant avec les ADC en Pooling. Pour un ratio de 50% on obtient un courant nul ou proche de 0  pour un ratio superieur un courant positif pour un courant inférieur un courant négatif. L'ADC peut etre réglé en oversampling pour stabiliser la mesure de courant. La résolution de l'ADC est 2050 oversampling x8 Uref=1.65V SENSITIVITY=0.05.
+
