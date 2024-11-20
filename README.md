@@ -262,4 +262,33 @@ I= (voltage-Uref)/SENSITIVITY
 
 > [!TIP]
 potentiellement il est possible de deporter le Uref directement sur voltage en convertissant en une adcvalue raw (1990).
+> 
+
+
+
+
+
+
+
+
+
+"void display_current() {
+    ADC_ChannelConfTypeDef sConfig = {0};
+    char buffer[50];
+
+    // Démarrer l'ADC, effectuer une conversion, et lire la valeur
+
+    if (HAL_ADC_PollForConversion(&hadc1, HAL_MAX_DELAY) == HAL_OK) {
+        uint32_t adc_value = HAL_ADC_GetValue(&hadc1);
+        int len = snprintf(buffer, sizeof(buffer), "ADC Value: %lu\r\n", adc_value);
+        HAL_UART_Transmit(&huart2, (uint8_t*)buffer, len, HAL_MAX_DELAY);
+
+        float voltage = ((adc_value) * VREF) / ADC_RES;   // Convertir l'ADC en tension
+        float current = (voltage - UREF) / SENSITIVITY; // Calculer le courant
+        current = current + 1;
+        len = snprintf(buffer, sizeof(buffer), "Current on PA1 (ADC1_IN2): %.2f A\r\n", current);
+        HAL_UART_Transmit(&huart2, (uint8_t*)buffer, len, HAL_MAX_DELAY); // Envoyer via UART
+    }
+    HAL_ADC_Stop(&hadc1);
+}" AVANT LE DMA
 
