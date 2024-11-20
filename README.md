@@ -239,3 +239,10 @@ Code commande "speed" avec un changement progressif de la PWM
 > Il est fortement conseillé de rajouter le traitement des commandes absurdes (<0 et >100)
 > pour eviter de cramer les composant sur une faute de frappe. Ne pas oublier le HAL_Delay
 ## 7.2. Mesure du courant
+
+GO 10-SME est la sonde a effet HALL qui renvoie les courant mesurés
+> [!Caution]
+>Attention les signals qui renvoie la mesure de courant s'appellent U_Imes et V_Imes.
+> Mais ce sont bien des mesures de courant U et V sont les noms des canaux.
+
+> 
